@@ -3,7 +3,7 @@
 ## Name
 
 ```
-Elton
+Elton Goh Jun Hao
 ```
 ## Matriculation Number:
 
