@@ -2,14 +2,22 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import {Container, Form, Button, Card} from 'react-bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Sign_in.css';
-class Login extends Component {
+import './SignIn.css';
+import loginImage from "../../Images/moonview.jpg";
+import {Link} from "react-router-dom";
+
+
+
+
+
+class SignUp extends Component {
   constructor(props) {
     super(props)
   
     this.state = {
        email: '',
-       password: ''
+       password: '',
+       passwordConfirmation: ''
     }
   }
 
@@ -21,27 +29,29 @@ class Login extends Component {
     this.setState({ password: event.target.value }) 
   }
 
+  
+  passwordConfirmationChangeHandler = event => {
+    this.setState({ passwordConfirmation: event.target.value }) 
+  }
+
   submitHandler = event => {
     event.preventDefault()
     console.log(this.state)
-    axios.post('http://localhost:3001/api/v1/auth/sign_in', this.state)
+    axios.post('http://localhost:3001/api/v1/auth', this.state)
     .then(
-      response => {
-      localStorage.setItem('access-token', response.headers["access-token"]);
-      localStorage.setItem('client', response.headers["client"]);
-      localStorage.setItem('uid', response.headers["uid"]);
-      this.props.history.push("/tasks");
+      () => {
+      this.props.history.push("/");
     
       }
-
-
     )  
     .catch(error => {console.log(error)})
   }
   
   render() {
-    const {email, password} = this.state
+    const {email, password, passwordConfirmation} = this.state
     return (
+      <div style={{ backgroundImage: `url(${loginImage})`, backgroundSize: 'cover', height: "100vh" }}>
+
         <Container className = "LoginContainer">
           <Card border="primary" className = "Border">
             <Form onSubmit ={this.submitHandler} >
@@ -55,17 +65,23 @@ class Login extends Component {
             <Form.Group controlId = "password">
               <Form.Label>Password</Form.Label>
                 <Form.Control type="password" placeholder="Password" value = {password} onChange={this.passwordChangeHandler} />
+            </Form.Group>
+
+            <Form.Group controlId = "passwordConfirmation">
+              <Form.Label>Password Confirmation</Form.Label>
+                <Form.Control type="password" placeholder="Password Confirmation" value = {passwordConfirmation} onChange={this.passwordConfirmationChangeHandler} />
                   <Form.Text className="text-muted">
                     Please do not use password that you use for your other accounts.
                   </Form.Text>
             </Form.Group>
-
-            <Button variant="primary" type ="submit">Login</Button>
+            <Link to="/">Sign in instead</Link>
+            <Button variant="primary" type ="submit" className="SignUpButton">Sign up</Button>
           </Form>
           </Card>
         </Container>
+      </div>
     )
   }
 }
 
-export default Login
+export default SignUp
