@@ -2,7 +2,6 @@
   "name": "task-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3000",
   "dependencies": {
     "@fullcalendar/bootstrap": "^5.5.0",
     "@fullcalendar/core": "^5.5.0",
