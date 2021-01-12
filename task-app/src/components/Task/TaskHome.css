@@ -4,27 +4,9 @@
   background-size: cover;
   height: 100%;
   min-height: 100vh;
+  width: 100%;
+  min-width: 100vw;
   overflow: hidden;
-}
-
-.InputContainer {
-  height: 100%;
-  margin: 0;
-  padding-left: 0.9%;
-
-}
-
-
-.SubmitButton {
-  max-height: 30px;
-  margin-top: 2.9%;
-  margin-left: 0.5%;
-
-}
-.TableContainer {
-  
-  height: 100%;
-
 }
 
 .TodayWeekTable{
@@ -33,18 +15,13 @@
   min-width: 600px;
   min-height: 600px;
 
-
 }
 .FullCalendar {
 
   background: silver;
-
   padding-top: 1%;
   padding-bottom: 1%;
   border-radius: 3%;
-  min-width: 600px;
-  min-height: 600px;
+
 
 }
-
-

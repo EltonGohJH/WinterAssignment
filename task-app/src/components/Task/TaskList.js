@@ -4,8 +4,10 @@ import Grid from '@material-ui/core/Grid';
 import './TaskList.css';
 import axios from "axios";
 import {Form, Button, Container, Badge, Nav} from 'react-bootstrap';
-import TagsInput from 'react-tagsinput'
+import TagsInput from 'react-tagsinput-special'
 import moment from 'moment'
+
+//Material Table
 import MaterialTable, {MTableToolbar} from 'material-table'
 import { createMuiTheme } from '@material-ui/core/styles';
 import { ThemeProvider } from '@material-ui/styles';
@@ -61,22 +63,23 @@ class TaskList extends Component {
   constructor(props) {
     super(props)
       this.state = {
+        // axios get will be stored in tasks
         tasks: [],
+        // form fields
         title: "",
         description: "",
-        start_time: "",
+        start_time: moment().format("YYYY-MM-DDTHH:mm"),
         deadline: "",
         tags: [],
+        //data is the filtered tasks records
         data: [],
+        //use to check what table records need to be rendered. default is Not completed. 
         key: "NotCompleted" 
-      
-
       }
   }
 
   componentDidMount() {
     this.getTasks();
-    
   }
 
   getTasks() {
@@ -97,18 +100,21 @@ class TaskList extends Component {
     })
   }
 
+  //Table view change
+  //Notice that 8 hours is subtracted. This is due to the typing of datetime in material table. The edit field shows a different time due to timezone issue.
   onSelectNotCompleted = () => {
     this.setState({data: this.state.tasks.filter((item) => 
       item.completed !== true && !moment(item.deadline).isBefore(moment().format()))
         .map(({id, title, deadline,start_time, completed_time, tags, completed}) => 
-          ({id, title, deadline: moment(deadline).subtract(8, "hours").utc().format(), tags, completed, start_time, completed_time}))});
+          ({id, title, deadline: moment(deadline).subtract(8, "hours").utc().format(), tags, completed, start_time: moment(start_time).subtract(8, "hours").utc().format(), completed_time}))});
     this.setState({key: "NotCompleted"})
   }
+
   onSelectOverdue = () => {
     this.setState({data: this.state.tasks.filter((item) => 
       moment(item.deadline).isBefore(moment().format()) &&   item.completed !== true)
         .map(({id, title, deadline,start_time, completed_time, tags, completed}) =>  
-          ({id, title, deadline: moment(deadline).subtract(8, "hours").utc().format(), tags, completed, start_time, completed_time}))});
+          ({id, title, deadline: moment(deadline).subtract(8, "hours").utc().format(), tags, completed, start_time: moment(start_time).subtract(8, "hours").utc().format(), completed_time}))});
     this.setState({key: "Overdue"})
   } 
 
@@ -117,7 +123,7 @@ class TaskList extends Component {
     this.setState({data: this.state.tasks.filter((item) => 
       item.completed === true)
         .map(({id, title, deadline,start_time, completed_time, tags, completed}) => 
-          ({id, title, deadline: moment(deadline).subtract(8, "hours").utc().format(), tags, completed, start_time, completed_time}))});
+          ({id, title, deadline: moment(deadline).subtract(8, "hours").utc().format(), tags, completed, start_time: moment(start_time).subtract(8, "hours").utc().format(), completed_time}))});
     this.setState({key: "Completed"})
   }
   
@@ -145,50 +151,25 @@ class TaskList extends Component {
     )
   }
 
+  //8 hours is added back to negate the subtraction in time.
   updateTask = (newData, oldData, resolve) => {
-    // //validation
-    let errorList = []
-    // if(newData.first_name === ""){
-    //   errorList.push("Please enter first name")
-    // }
-    // if(newData.last_name === ""){
-    //   errorList.push("Please enter last name")
-    // }
-    // if(newData.email === "" || validateEmail(newData.email) === false){
-    //   errorList.push("Please enter a valid email")
-    // }
-  
-    if (errorList.length < 1){
-      axios.patch(`http://localhost:3001/api/v1/tasks/`+newData.id, {task: {title: newData.title, description: newData.description, start_time: newData.start_time, deadline: moment(newData.deadline).add(8, "hours").format(),
-      completed_time: newData.completed_time, completed: newData.completed, tags: newData.tags}},
-        { 
-          headers: {
-            'access-token': localStorage.getItem('access-token'),
-            'client': localStorage.getItem('client'),
-            'expiry': localStorage.getItem('expiry'),
-            'uid': localStorage.getItem('uid'),
-            'token-type': localStorage.getItem('token-type')
-          }
+    axios.patch(`http://localhost:3001/api/v1/tasks/`+newData.id, {task: {title: newData.title, description: newData.description, start_time: moment(newData.start_time).add(8, "hours").format(), 
+      deadline: moment(newData.deadline).add(8, "hours").format(),
+        completed_time: newData.completed_time, completed: newData.completed, tags: newData.tags}},
+      { 
+        headers: {
+          'access-token': localStorage.getItem('access-token'),
+          'client': localStorage.getItem('client'),
+          'expiry': localStorage.getItem('expiry'),
+          'uid': localStorage.getItem('uid'),
+          'token-type': localStorage.getItem('token-type')
         }
-      )
-      .then(() => {
-        this.getTasks();
-        resolve()
-  
-      })
-      // .catch(error => {
-      //   setErrorMessages(["Update failed! Server error"])
-      //   setIserror(true)
-      //   resolve()
-        
-      // })
-    // }else{
-    //   setErrorMessages(errorList)
-    //   setIserror(true)
-    //   resolve()
-  
-    }
-  
+      }
+    )
+    .then(() => {
+      this.getTasks();
+      resolve()
+    })
   }
 
 
@@ -210,6 +191,7 @@ class TaskList extends Component {
     .then(() => {this.getTasks()})
   }
 
+  //form change handler
   titleChangeHandler = event => {
     this.setState({ title: event.target.value }) 
   }
@@ -231,10 +213,11 @@ class TaskList extends Component {
   }  
 
   render() {
+    //dark theme for Material table
     const darkTheme = createMuiTheme({
       palette: {
         type: 'dark',
-      },
+      }
     });
     
     return (
@@ -242,7 +225,7 @@ class TaskList extends Component {
         <Navbar/>
 
         <Grid container spacing={0} justify="center" alignItems="center" direction="column">
-          <Grid item xs={12}>
+          <Grid item xs={7}>
             <Form className="InputForm" onSubmit ={this.submitHandler}>
               <Form.Row>
                 <Form.Group controlId="formTitle">
@@ -270,29 +253,30 @@ class TaskList extends Component {
                   <TagsInput value={this.state.tags} onChange={this.tagsChangeHandler}/>
                 </Form.Group>
 
-                <Form.Group controlId="formDeadline">
-                  <Form.Label></Form.Label>
+                <div>
                   <Button className="SubmitButton"variant="primary"  size="sm" type="submit">Submit</Button>
-                </Form.Group>
+                </div>
               </Form.Row>
             </Form>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={11}>
             <ThemeProvider theme={darkTheme}>
               <MaterialTable
                 icons={tableIcons} 
                 title="Task List"
+  
                 columns={[
                   { title: 'Title', field: 'title', type: 'string' },
                   { title: 'Description', field: 'description', type: 'string' },
-                  { title: 'Start time', field: 'start_time', type: "datetime", render: rowData =>  moment(String(rowData.start_time)).utc().format('DD/MM/YY hh:mm') },
-                  { title: 'Deadline', field: 'deadline', type: "datetime", render: rowData =>  moment(String(rowData.deadline)).utc().format('DD/MM/YY hh:mm') },
+                  { title: 'Start time', field: 'start_time', type: "datetime", render: rowData =>  moment(String(rowData.start_time)).format('DD/MM/YY hh:mm') },
+                  { title: 'Deadline', field: 'deadline', type: "datetime", render: rowData =>  moment(String(rowData.deadline)).format('DD/MM/YY hh:mm') },
                   { title: 'Completed time', field: 'completed_time', type: "datetime", render: rowData => typeof(rowData.completed_time) === "object" ? "" : moment(String(rowData.completed_time)).format('DD/MM/YY hh:mm') },
-                  { title: 'Tags', field: 'tags', render:  rowData => typeof(rowData.tags) === "object" ? "" : rowData.tags.split(",").map(tags => <Container><Badge pill variant="success">{tags}</Badge> </Container>)},
+                  { title: 'Tags', field: 'tags', render:  rowData => typeof(rowData.tags) === "object" ? "" : rowData.tags.split(",").map((tags, index) => <Container key={index}><Badge pill variant="success">{tags}</Badge> </Container>) },
                   { title: 'Completed?', field: 'completed', type: 'boolean' }
                 ]}
 
+                //this is the button to render different views onClick.
                 components={{
                   Toolbar: props => (
                     <div>
@@ -316,8 +300,6 @@ class TaskList extends Component {
                 }}
 
                 data = {this.state.data}
-
-
                 actions={[
                   rowData => ({ 
                     icon: () => <DeleteOutline />,
@@ -342,18 +324,12 @@ class TaskList extends Component {
                     })
                 }}
 
-                localization={{ toolbar: { searchPlaceholder: 'Title Search' } }} 
+                localization={{ toolbar: { searchPlaceholder: 'Search any columns here' } }} 
               />
-          </ThemeProvider>
+            </ThemeProvider>
+          </Grid>
         </Grid>
-        </Grid>
-                    
-
-            
-
-
       </div>
-      
   
     )     
   }

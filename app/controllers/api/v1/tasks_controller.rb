@@ -10,26 +10,30 @@ module Api
 
       def create
         @task = current_api_v1_user.tasks.create(task_params)
-        render json: @task
+        if @task.save
+          render json: @task, status: :created
+        else
+          render json: @task.errors, status: unprocessable_entity
+        end
       end
 
       def destroy
-        @task = Task.find(params[:id])
+        @task = current_api_v1_user.tasks.find(params[:id])
         @task.destroy
         head :no_content, status: :ok
+        rescue ActiveRecord::RecordNotDestroyed
+          render json: {status: "error", code: 4000, message: "There is an error. Please try again."}
       end
                 
       def update
-        @task = Task.find(params[:id])
+        @task = current_api_v1_user.tasks.find(params[:id])
         @task.update(task_params)
-        render json: @task
+        if @task.update(task_params)
+          render json: @task
+        else
+          render json: @task.errors, status: :unprocessable_entity
+        end
       end
-
-
-
-
-
-
 
 
       private

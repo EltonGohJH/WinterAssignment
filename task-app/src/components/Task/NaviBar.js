@@ -8,6 +8,7 @@ import axios from "axios";
 
 function Navibar() {
   const history = useHistory();
+  //delete the session and push to the login page.
   const signOutHandler = () => {
     axios.delete('http://localhost:3001/api/v1/auth/sign_out', { 
       headers: {
@@ -20,9 +21,8 @@ function Navibar() {
     )
     .then(response => {
         history.push("/");
-    })
-              
-}
+    })           
+  }
     return (
       <div className="App">
         <Navbar bg="dark" variant="dark">
@@ -34,6 +34,6 @@ function Navibar() {
         </Navbar>
       </div>
     );
-  }
+}
   
   export default Navibar;
