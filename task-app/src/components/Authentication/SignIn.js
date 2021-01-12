@@ -30,7 +30,7 @@ class Login extends Component {
 
   submitHandler = event => {
     event.preventDefault()
-    axios.post('http://localhost:3001/api/v1/auth/sign_in', {email: this.state.email, password: this.state.password})
+    axios.post('https://task-api-2021.herokuapp.com/api/v1/auth/sign_in', {email: this.state.email, password: this.state.password})
     .then(
       response => {
       localStorage.setItem('access-token', response.headers["access-token"]);

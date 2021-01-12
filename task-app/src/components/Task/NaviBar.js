@@ -10,7 +10,7 @@ function Navibar() {
   const history = useHistory();
   //delete the session and push to the login page.
   const signOutHandler = () => {
-    axios.delete('http://localhost:3001/api/v1/auth/sign_out', { 
+    axios.delete('https://task-api-2021.herokuapp.com/api/v1/auth/sign_out', { 
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

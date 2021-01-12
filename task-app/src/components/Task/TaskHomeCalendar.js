@@ -16,7 +16,7 @@ class TaskCalendar extends Component {
 
 
   getTasks() {
-    axios.get('http://localhost:3001/api/v1/tasks', { 
+    axios.get('https://task-api-2021.herokuapp.com/api/v1/tasks', { 
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),

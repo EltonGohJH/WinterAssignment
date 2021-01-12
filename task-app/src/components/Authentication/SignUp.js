@@ -37,7 +37,7 @@ class SignUp extends Component {
 
   submitHandler = event => {
     event.preventDefault()
-    axios.post('http://localhost:3001/api/v1/auth', this.state)
+    axios.post('https://task-api-2021.herokuapp.com/api/v1/auth', {email: this.state.email, password: this.state.password, passwordConfirmation: this.state.passwordConfirmation})
     .then(
       () => {
       this.props.history.push("/");

@@ -83,7 +83,7 @@ class TaskList extends Component {
   }
 
   getTasks() {
-    axios.get('http://localhost:3001/api/v1/tasks', { 
+    axios.get('https://task-api-2021.herokuapp.com/api/v1/tasks', { 
       headers: {
         'access-token': localStorage.getItem('access-token'),
         'client': localStorage.getItem('client'),
@@ -132,7 +132,7 @@ class TaskList extends Component {
   
 
   deleteTask = id => {
-    axios.delete(`http://localhost:3001/api/v1/tasks/${id}`, 
+    axios.delete(`https://task-api-2021.herokuapp.com/api/v1/tasks/${id}`, 
       { 
         headers: {
           'access-token': localStorage.getItem('access-token'),
@@ -153,7 +153,7 @@ class TaskList extends Component {
 
   //8 hours is added back to negate the subtraction in time.
   updateTask = (newData, oldData, resolve) => {
-    axios.patch(`http://localhost:3001/api/v1/tasks/`+newData.id, {task: {title: newData.title, description: newData.description, start_time: moment(newData.start_time).add(8, "hours").format(), 
+    axios.patch(`https://task-api-2021.herokuapp.com/api/v1/tasks/`+newData.id, {task: {title: newData.title, description: newData.description, start_time: moment(newData.start_time).add(8, "hours").format(), 
       deadline: moment(newData.deadline).add(8, "hours").format(),
         completed_time: newData.completed_time, completed: newData.completed, tags: newData.tags}},
       { 
@@ -176,7 +176,7 @@ class TaskList extends Component {
 
   submitHandler = event => {
     event.preventDefault()
-    axios.post('http://localhost:3001/api/v1/tasks', {task: {title: this.state.title, description: this.state.description, start_time: this.state.start_time, deadline: this.state.deadline, 
+    axios.post('https://task-api-2021.herokuapp.com/api/v1/tasks', {task: {title: this.state.title, description: this.state.description, start_time: this.state.start_time, deadline: this.state.deadline, 
       tags: this.state.tags.join(",")} }, 
       { 
         headers: {

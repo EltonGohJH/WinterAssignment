@@ -63,7 +63,7 @@ class TaskTable extends Component {
 
 
 getTasks() {
-  axios.get('http://localhost:3001/api/v1/tasks', { 
+  axios.get('https://task-api-2021.herokuapp.com/api/v1/tasks', { 
     headers: {
       'access-token': localStorage.getItem('access-token'),
       'client': localStorage.getItem('client'),
@@ -116,7 +116,7 @@ onSelectOverdue = () => {
 
 
 deleteTask = id => {
-  axios.delete(`http://localhost:3001/api/v1/tasks/${id}`, 
+  axios.delete(`https://task-api-2021.herokuapp.com/api/v1/tasks/${id}`, 
     { 
       headers: {
         'access-token': localStorage.getItem('access-token'),
@@ -151,7 +151,7 @@ updateTask = (newData, oldData, resolve) => {
   // }
 
   if (errorList.length < 1){
-    axios.patch(`http://localhost:3001/api/v1/tasks/`+newData.id, {task: {title: newData.title, description: newData.description, start_time: newData.start_time, deadline: moment(newData.deadline).add(8, "hours").format(),
+    axios.patch(`https://task-api-2021.herokuapp.com/api/v1/tasks/`+newData.id, {task: {title: newData.title, description: newData.description, start_time: newData.start_time, deadline: moment(newData.deadline).add(8, "hours").format(),
     completed_time: newData.completed_time, completed: newData.completed, tags: newData.tags}},
       { 
         headers: {

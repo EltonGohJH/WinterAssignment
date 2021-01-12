@@ -11,7 +11,7 @@ function ProtectedRoute( {component: Component, ...rest}) {
   //useEffect is needed to handle change in state
   useEffect(() => {
     const getAuth = async () => {
-      await axios.get('http://localhost:3001/api/v1/auth/validate_token', { 
+      await axios.get('https://task-api-2021.herokuapp.com/api/v1/auth/validate_token', { 
         headers: {
           'access-token': localStorage.getItem('access-token'),
           'client': localStorage.getItem('client'),
