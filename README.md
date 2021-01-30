@@ -14,13 +14,11 @@ A0217471H
 ## Heroku link for backend (Rails API):
 ```
 https://task-api-2021.herokuapp.com/
-
 ```
 
 ## Heroku link for frontend (React):
 ```
 https://task-app-2021.herokuapp.com/
-
 ```
 
 ## Potential error
